@@ -2,7 +2,7 @@
 
 Une application mobile React Native élégante pour découvrir des produits de beauté, créer une collection virtuelle et comparer les prix entre différents revendeurs.
 
-![Ayla](./assets/assets/welcome-bg.png)
+![Ayla](./assets/welcome-bg.png)
 
 ## 🎨 Fonctionnalités
 
