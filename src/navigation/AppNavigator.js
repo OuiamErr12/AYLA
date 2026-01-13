@@ -13,6 +13,13 @@ import SettingsScreen from '../screens/SettingsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import StaticPageScreen from '../screens/StaticPageScreen';
 import CheckoutScreen from '../screens/CheckoutScreen';
+import AdminDashboard from '../screens/admin/AdminDashboard';
+import AdminProductList from '../screens/admin/AdminProductList';
+import AdminProductForm from '../screens/admin/AdminProductForm';
+import AdminUserList from '../screens/admin/AdminUserList';
+import AdminOrderList from '../screens/admin/AdminOrderList';
+import InvoicePreviewScreen from '../screens/InvoicePreviewScreen';
+import SkinCareQuizScreen from '../screens/SkinCareQuizScreen';
 
 const Stack = createStackNavigator();
 
@@ -43,6 +50,15 @@ const AppNavigator = () => {
                     <Stack.Screen name="Notifications" component={NotificationsScreen} />
                     <Stack.Screen name="StaticPage" component={StaticPageScreen} />
                     <Stack.Screen name="Checkout" component={CheckoutScreen} />
+
+                    {/* Admin Screens */}
+                    <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+                    <Stack.Screen name="AdminProductList" component={AdminProductList} />
+                    <Stack.Screen name="AdminProductForm" component={AdminProductForm} />
+                    <Stack.Screen name="AdminUserList" component={AdminUserList} />
+                    <Stack.Screen name="AdminOrderList" component={AdminOrderList} />
+                    <Stack.Screen name="InvoicePreview" component={InvoicePreviewScreen} />
+                    <Stack.Screen name="SkinCareQuiz" component={SkinCareQuizScreen} />
                 </Stack.Navigator>
             ) : (
                 <Stack.Navigator screenOptions={{ headerShown: false }}>

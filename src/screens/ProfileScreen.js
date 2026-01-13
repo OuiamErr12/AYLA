@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
+import { getUserProfile, getUserTier } from '../services/userService';
 import Button from '../components/Button';
 import colors from '../theme/colors';
 import { textStyles } from '../theme/typography';
@@ -19,6 +21,27 @@ import FadeInView from '../components/FadeInView';
 
 const ProfileScreen = ({ navigation }) => {
     const { user, logout } = useAuth();
+    const [userProfile, setUserProfile] = React.useState(null);
+    const [loading, setLoading] = React.useState(true);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchProfile = async () => {
+                if (user?.uid) {
+                    try {
+                        const profile = await getUserProfile(user.uid);
+                        setUserProfile(profile);
+                    } catch (error) {
+                        console.error('Error fetching profile in ProfileScreen:', error);
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+            };
+
+            fetchProfile();
+        }, [user?.uid])
+    );
 
     const handleLogout = () => {
         Alert.alert(
@@ -71,6 +94,14 @@ const ProfileScreen = ({ navigation }) => {
         },
     ];
 
+    const adminItem = {
+        icon: 'shield-checkmark-outline',
+        title: 'Admin Panel',
+        onPress: () => navigation.navigate('AdminDashboard'),
+    };
+
+    const displayMenuItems = user?.role === 'admin' ? [adminItem, ...menuItems] : menuItems;
+
     return (
         <SafeAreaView style={styles.container} edges={['top']}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -86,11 +117,30 @@ const ProfileScreen = ({ navigation }) => {
                     </View>
                     <Text style={styles.userName}>{user?.displayName || 'Beauty Lover'}</Text>
                     <Text style={styles.userEmail}>{user?.email || 'user@example.com'}</Text>
+
+                    {/* Ayla Points Badge */}
+                    <View style={styles.pointsBadgeContainer}>
+                        <View style={styles.pointsBadge}>
+                            <Ionicons name="sparkles" size={16} color={colors.accent} />
+                            <Text style={styles.pointsText}>{userProfile?.points || 0} Ayla Points</Text>
+                        </View>
+                        {userProfile?.points > 0 && (
+                            <View style={[styles.tierBadge, { backgroundColor: getUserTier(userProfile.points).color }]}>
+                                <Text style={styles.tierBadgeText}>{getUserTier(userProfile.points).name}</Text>
+                            </View>
+                        )}
+                    </View>
+
+                    {user?.role === 'admin' && (
+                        <View style={styles.adminBadge}>
+                            <Text style={styles.adminBadgeText}>ADMIN</Text>
+                        </View>
+                    )}
                 </FadeInView>
 
                 {/* Menu Items */}
                 <FadeInView style={styles.menuContainer} delay={200}>
-                    {menuItems.map((item, index) => (
+                    {displayMenuItems.map((item, index) => (
                         <TouchableOpacity
                             key={index}
                             style={styles.menuItem}
@@ -99,9 +149,16 @@ const ProfileScreen = ({ navigation }) => {
                         >
                             <View style={styles.menuItemLeft}>
                                 <View style={styles.iconContainer}>
-                                    <Ionicons name={item.icon} size={24} color={colors.accent} />
+                                    <Ionicons
+                                        name={item.icon}
+                                        size={24}
+                                        color={item.title === 'Admin Panel' ? colors.charcoal : colors.accent}
+                                    />
                                 </View>
-                                <Text style={styles.menuItemText}>{item.title}</Text>
+                                <Text style={[
+                                    styles.menuItemText,
+                                    item.title === 'Admin Panel' && { fontWeight: 'bold' }
+                                ]}>{item.title}</Text>
                             </View>
                             <Ionicons name="chevron-forward" size={20} color={colors.gray} />
                         </TouchableOpacity>
@@ -133,82 +190,127 @@ const styles = StyleSheet.create({
     },
     header: {
         paddingHorizontal: spacing.xl,
-        paddingVertical: spacing.base,
+        paddingVertical: spacing.lg,
+        alignItems: 'center', // Center title
     },
     headerTitle: {
         ...textStyles.h2,
         color: colors.charcoal,
     },
     userCard: {
-        backgroundColor: colors.white,
-        marginHorizontal: spacing.xl,
-        marginBottom: spacing.xl,
-        borderRadius: borderRadius.xl,
-        padding: spacing.xl,
+        // Removed card styling (bg, shadow, radius) for elegance
+        marginBottom: spacing.xxl, // More breathing room
         alignItems: 'center',
-        ...shadows.base,
+        paddingHorizontal: spacing.xl,
     },
     avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: colors.primaryLight,
+        width: 110, // Slightly larger
+        height: 110,
+        borderRadius: 55,
+        backgroundColor: colors.white, // White bg for avatar placeholder
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: spacing.base,
+        marginBottom: spacing.md,
+        ...shadows.sm, // Keep subtle shadow only on avatar
+        borderWidth: 2,
+        borderColor: colors.white,
     },
     userName: {
-        ...textStyles.h3,
+        ...textStyles.h2, // Larger name
         color: colors.charcoal,
-        marginBottom: spacing.xs,
+        marginBottom: 4,
     },
     userEmail: {
         ...textStyles.body,
-        color: colors.darkGray,
+        color: colors.gray,
+        marginBottom: spacing.lg,
     },
     menuContainer: {
-        backgroundColor: colors.white,
-        marginHorizontal: spacing.xl,
-        borderRadius: borderRadius.xl,
-        overflow: 'hidden',
-        ...shadows.base,
+        // Removed container styling
+        paddingHorizontal: spacing.xl,
+        marginBottom: spacing.xl,
     },
     menuItem: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: spacing.base,
-        paddingHorizontal: spacing.lg,
+        paddingVertical: spacing.md,
         borderBottomWidth: 1,
-        borderBottomColor: colors.lightGray,
+        borderBottomColor: 'rgba(0,0,0,0.03)', // Very subtle divider
+        marginBottom: spacing.xs,
     },
     menuItemLeft: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     iconContainer: {
-        width: 40,
-        height: 40,
-        borderRadius: borderRadius.md,
-        backgroundColor: colors.primaryLight,
+        // Removed background color and size constraints
+        width: 30, // Just enough space
         alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: spacing.base,
+        marginRight: spacing.md,
     },
     menuItemText: {
         ...textStyles.body,
+        fontSize: 16,
         color: colors.charcoal,
-        fontWeight: '500',
+        fontWeight: '400', // Lighter weight for elegance
+    },
+    pointsBadgeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.sm,
+        marginTop: spacing.sm,
+    },
+    pointsBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: colors.white,
+        paddingHorizontal: spacing.md,
+        paddingVertical: 6,
+        borderRadius: borderRadius.full,
+        borderWidth: 1,
+        borderColor: colors.border,
+    },
+    tierBadge: {
+        paddingHorizontal: spacing.md,
+        paddingVertical: 6,
+        borderRadius: borderRadius.full,
+    },
+    tierBadgeText: {
+        ...textStyles.caption,
+        color: colors.white,
+        fontWeight: '600',
+    },
+    pointsText: {
+        ...textStyles.caption,
+        color: colors.charcoal,
+        fontWeight: '600',
+        marginLeft: spacing.xs,
     },
     logoutContainer: {
         paddingHorizontal: spacing.xl,
-        paddingVertical: spacing.xl,
+        paddingBottom: spacing.xxl,
     },
     version: {
         ...textStyles.caption,
         color: colors.gray,
         textAlign: 'center',
         marginBottom: spacing.xl,
+        opacity: 0.5,
+    },
+    adminBadge: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        backgroundColor: colors.charcoal,
+        paddingHorizontal: spacing.sm,
+        paddingVertical: 4,
+        borderRadius: borderRadius.sm,
+    },
+    adminBadgeText: {
+        color: colors.white,
+        fontSize: 10,
+        fontWeight: 'bold',
     },
 });
 

@@ -1,92 +1,50 @@
-// Ayla Typography System
-export const typography = {
-    // Font Families
-    fonts: {
-        heading: 'System', // Will use system default, can be customized with expo-font
-        body: 'System',
-        mono: 'monospace',
-    },
-
-    // Font Sizes
-    sizes: {
-        xs: 12,
-        sm: 14,
-        base: 16,
-        lg: 18,
-        xl: 20,
-        '2xl': 24,
-        '3xl': 30,
-        '4xl': 36,
-        '5xl': 48,
-    },
-
-    // Font Weights
-    weights: {
-        light: '300',
-        regular: '400',
-        medium: '500',
-        semibold: '600',
-        bold: '700',
-        extrabold: '800',
-    },
-
-    // Line Heights
-    lineHeights: {
-        tight: 1.2,
-        normal: 1.5,
-        relaxed: 1.75,
-        loose: 2,
-    },
-
-    // Letter Spacing
-    letterSpacing: {
-        tight: -0.5,
-        normal: 0,
-        wide: 0.5,
-        wider: 1,
-    },
+const typography = {
+    primary: 'System', // Using system font to be safe/initial
+    header: 'System',
 };
 
-// Pre-defined Text Styles
 export const textStyles = {
     h1: {
-        fontSize: typography.sizes['4xl'],
-        fontWeight: typography.weights.bold,
-        letterSpacing: typography.letterSpacing.tight,
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: '#333333',
+        marginBottom: 8,
     },
     h2: {
-        fontSize: typography.sizes['3xl'],
-        fontWeight: typography.weights.bold,
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333333',
+        marginBottom: 8,
     },
     h3: {
-        fontSize: typography.sizes['2xl'],
-        fontWeight: typography.weights.semibold,
-    },
-    h4: {
-        fontSize: typography.sizes.xl,
-        fontWeight: typography.weights.semibold,
+        fontSize: 20,
+        fontWeight: '600',
+        color: '#333333',
+        marginBottom: 4,
     },
     body: {
-        fontSize: typography.sizes.base,
-        fontWeight: typography.weights.regular,
-    },
-    bodyLarge: {
-        fontSize: typography.sizes.lg,
-        fontWeight: typography.weights.regular,
+        fontSize: 16,
+        color: '#333333',
+        lineHeight: 24,
     },
     bodySmall: {
-        fontSize: typography.sizes.sm,
-        fontWeight: typography.weights.regular,
+        fontSize: 14,
+        color: '#666666',
+        lineHeight: 20,
     },
     caption: {
-        fontSize: typography.sizes.xs,
-        fontWeight: typography.weights.regular,
-        letterSpacing: typography.letterSpacing.wide,
+        fontSize: 12,
+        color: '#999999',
     },
     button: {
-        fontSize: typography.sizes.base,
-        fontWeight: typography.weights.semibold,
-        letterSpacing: typography.letterSpacing.wide,
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#FFFFFF',
+    },
+    error: {
+        fontSize: 14,
+        color: '#B00020',
+        marginTop: 4,
     },
 };
 

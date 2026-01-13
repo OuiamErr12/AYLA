@@ -106,7 +106,7 @@ const WishlistScreen = ({ navigation }) => {
             </Text>
             <Button
                 title="Discover Products"
-                onPress={() => navigation.navigate('Home')}
+                onPress={() => navigation.navigate('Home', { openCatalog: true })}
                 style={styles.discoverButton}
             />
         </FadeInView>

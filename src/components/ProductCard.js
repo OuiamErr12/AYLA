@@ -5,10 +5,14 @@ import colors from '../theme/colors';
 import { textStyles } from '../theme/typography';
 import spacing, { borderRadius, shadows } from '../theme/spacing';
 
+import { useAuth } from '../contexts/AuthContext';
+
 const { width } = Dimensions.get('window');
 const cardWidth = (width - spacing.lg * 2 - spacing.md) / 2;
 
 const ProductCard = ({ product, onPress, onToggleWishlist, isWishlisted, index = 0, style }) => {
+    const { user } = useAuth();
+    const isAdmin = user?.role?.trim() === 'admin';
     const scaleAnim = useRef(new Animated.Value(0.95)).current;
     const opacityAnim = useRef(new Animated.Value(0)).current;
     const pressAnim = useRef(new Animated.Value(1)).current;
@@ -70,17 +74,19 @@ const ProductCard = ({ product, onPress, onToggleWishlist, isWishlisted, index =
                             style={styles.image}
                             resizeMode="cover"
                         />
-                        <TouchableOpacity
-                            style={styles.wishlistButton}
-                            onPress={onToggleWishlist}
-                            activeOpacity={0.7}
-                        >
-                            <Ionicons
-                                name={isWishlisted ? "heart" : "heart-outline"}
-                                size={20}
-                                color={isWishlisted ? colors.error : colors.charcoal}
-                            />
-                        </TouchableOpacity>
+                        {!isAdmin && (
+                            <TouchableOpacity
+                                style={styles.wishlistButton}
+                                onPress={onToggleWishlist}
+                                activeOpacity={0.7}
+                            >
+                                <Ionicons
+                                    name={isWishlisted ? "heart" : "heart-outline"}
+                                    size={20}
+                                    color={isWishlisted ? colors.error : colors.charcoal}
+                                />
+                            </TouchableOpacity>
+                        )}
                         {product.isNew && (
                             <View style={styles.newBadge}>
                                 <Text style={styles.newBadgeText}>NEW</Text>

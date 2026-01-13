@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, query, where, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase.config';
 import { sampleProducts as importedSampleProducts } from '../data/sampleProducts';
 
@@ -95,10 +95,56 @@ export const filterByPriceRange = (products, minPrice, maxPrice) => {
     );
 };
 
+// Add new product (Admin only)
+export const addProduct = async (productData) => {
+    try {
+        const productsCol = collection(db, 'products');
+        const docRef = await addDoc(productsCol, {
+            ...productData,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        });
+        return { id: docRef.id, ...productData };
+    } catch (error) {
+        console.error('Error adding product:', error);
+        throw error;
+    }
+};
+
+// Update existing product (Admin only)
+export const updateProduct = async (productId, productData) => {
+    try {
+        const productDoc = doc(db, 'products', productId);
+        await updateDoc(productDoc, {
+            ...productData,
+            updatedAt: new Date().toISOString(),
+        });
+        return true;
+    } catch (error) {
+        console.error('Error updating product:', error);
+        throw error;
+    }
+};
+
+// Delete product (Admin only)
+export const deleteProduct = async (productId) => {
+    try {
+        const productDoc = doc(db, 'products', productId);
+        await deleteDoc(productDoc);
+        return true;
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        throw error;
+    }
+};
+
 export default {
     getAllProducts,
     getProductById,
     getProductsByCategory,
     searchProducts,
     filterByPriceRange,
+    addProduct,
+    updateProduct,
+    deleteProduct,
 };

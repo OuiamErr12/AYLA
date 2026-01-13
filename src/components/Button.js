@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         ...textStyles.button,
-        color: colors.white,
+        color: colors.charcoal,
         textTransform: 'uppercase',
     },
     outlineText: {

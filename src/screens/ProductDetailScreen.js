@@ -23,6 +23,7 @@ import spacing, { borderRadius, shadows } from '../theme/spacing';
 import { addToWishlist, removeFromWishlist, isInWishlist } from '../services/wishlistService';
 import { addToCart } from '../utils/cartStorage';
 import { shareProduct } from '../utils/share';
+import ReviewSection from '../components/ReviewSection';
 
 const { width } = Dimensions.get('window');
 
@@ -164,27 +165,39 @@ const ProductDetailScreen = ({ route, navigation }) => {
                     </FadeInView>
 
                     {/* Action Buttons */}
-                    <FadeInView style={styles.actions} delay={400}>
-                        <AnimatedButton
-                            style={[styles.actionButton, inWishlist && styles.actionButtonActive]}
-                            onPress={handleWishlistToggle}
-                        >
-                            <Ionicons
-                                name={inWishlist ? "heart" : "heart-outline"}
-                                size={24}
-                                color={inWishlist ? colors.error : colors.accent}
-                            />
-                            <Text style={[styles.actionText, inWishlist && styles.actionTextActive]}>
-                                {inWishlist ? 'In Wishlist' : 'Add to Wishlist'}
-                            </Text>
-                        </AnimatedButton>
+                    {user?.role?.trim().toLowerCase() !== 'admin' ? (
+                        <FadeInView style={styles.actions} delay={400}>
+                            <TouchableOpacity
+                                style={[styles.wishlistCircle, inWishlist && styles.wishlistCircleActive]}
+                                onPress={handleWishlistToggle}
+                                activeOpacity={0.7}
+                            >
+                                <Ionicons
+                                    name={inWishlist ? "heart" : "heart-outline"}
+                                    size={28}
+                                    color={inWishlist ? colors.error : colors.accent}
+                                />
+                            </TouchableOpacity>
 
-                        <Button
-                            title="Add to Cart"
-                            onPress={handleAddToCart}
-                            variant="primary"
-                            style={styles.merchantButton}
-                        />
+                            <Button
+                                title="Add to Cart"
+                                onPress={handleAddToCart}
+                                variant="primary"
+                                style={styles.addToCartButton}
+                            />
+                        </FadeInView>
+                    ) : (
+                        <FadeInView style={styles.adminNote} delay={400}>
+                            <Ionicons name="shield-checkmark" size={24} color={colors.accent} />
+                            <Text style={styles.adminNoteText}>
+                                Admin View: Shopping features are disabled.
+                            </Text>
+                        </FadeInView>
+                    )}
+
+                    {/* Customer Reviews Section */}
+                    <FadeInView delay={500}>
+                        <ReviewSection productId={product.id} />
                     </FadeInView>
                 </View>
             </ScrollView>
@@ -293,32 +306,42 @@ const styles = StyleSheet.create({
         lineHeight: 24,
     },
     actions: {
-        gap: spacing.base,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.md,
+        marginTop: spacing.md,
     },
-    actionButton: {
+    wishlistCircle: {
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        backgroundColor: colors.white,
+        borderWidth: 1,
+        borderColor: colors.lightGray,
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...shadows.sm,
+    },
+    wishlistCircleActive: {
+        borderColor: colors.error,
+        backgroundColor: colors.white,
+    },
+    addToCartButton: {
+        flex: 1,
+    },
+    adminNote: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: colors.offWhite,
-        borderRadius: borderRadius.md,
-        paddingVertical: spacing.base,
-        paddingHorizontal: spacing.xl,
-        borderWidth: 2,
-        borderColor: colors.accent,
-        gap: spacing.sm,
-    },
-    actionButtonActive: {
         backgroundColor: colors.primaryLight,
+        padding: spacing.lg,
+        borderRadius: borderRadius.md,
+        gap: spacing.md,
     },
-    actionText: {
-        ...textStyles.button,
-        color: colors.accent,
-    },
-    actionTextActive: {
-        color: colors.error,
-    },
-    merchantButton: {
-        marginTop: spacing.sm,
+    adminNoteText: {
+        ...textStyles.body,
+        color: colors.accentDark,
+        fontWeight: '600',
     },
 });
 

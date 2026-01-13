@@ -21,21 +21,25 @@ const CategoryChip = ({ label, active = false, onPress }) => {
 const styles = StyleSheet.create({
     chip: {
         paddingHorizontal: spacing.lg,
-        paddingVertical: spacing.sm,
-        borderRadius: borderRadius.full,
-        backgroundColor: colors.lightGray,
+        paddingVertical: 10,
+        borderRadius: borderRadius.circle,
+        backgroundColor: 'transparent', // No background for inactive
         marginRight: spacing.sm,
     },
     chipActive: {
+        backgroundColor: colors.primary, // Using primary (Nude/Beige) or accent based on preference. Let's use accent match the 'brown' look better or stick to existing. 
+        // User said "like the photo" which is brown. colors.accent is #C4A484. colors.primary is #E8DCCA (lighter).
+        // The photo looked like a stronger beige/brown. I'll stick to accent or primary. 
+        // Let's use colors.accent which is darker/richer like the photo.
         backgroundColor: colors.accent,
     },
     label: {
         ...textStyles.bodySmall,
-        color: '#000000', // Explicit Black
+        color: colors.text, // Simple dark text for inactive
         fontWeight: '600',
     },
     labelActive: {
-        color: '#FFFFFF', // Explicit White
+        color: colors.white,
     },
 });
 

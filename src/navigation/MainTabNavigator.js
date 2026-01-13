@@ -6,11 +6,16 @@ import SearchScreen from '../screens/SearchScreen';
 import CartScreen from '../screens/CartScreen';
 import WishlistScreen from '../screens/WishlistScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import { useAuth } from '../contexts/AuthContext';
+import AdminDashboard from '../screens/admin/AdminDashboard';
 import colors from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
 
 const MainTabNavigator = () => {
+    const { user } = useAuth();
+    const isAdmin = user?.role?.trim() === 'admin';
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -28,6 +33,8 @@ const MainTabNavigator = () => {
                         iconName = focused ? 'heart' : 'heart-outline';
                     } else if (route.name === 'Profile') {
                         iconName = focused ? 'person' : 'person-outline';
+                    } else if (route.name === 'Admin') {
+                        iconName = focused ? 'shield-checkmark' : 'shield-checkmark-outline';
                     }
 
                     return <Ionicons name={iconName} size={size} color={color} />;
@@ -47,8 +54,14 @@ const MainTabNavigator = () => {
         >
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Search" component={SearchScreen} />
-            <Tab.Screen name="Cart" component={CartScreen} />
-            <Tab.Screen name="Wishlist" component={WishlistScreen} />
+            {!isAdmin ? (
+                <>
+                    <Tab.Screen name="Cart" component={CartScreen} />
+                    <Tab.Screen name="Wishlist" component={WishlistScreen} />
+                </>
+            ) : (
+                <Tab.Screen name="Admin" component={AdminDashboard} />
+            )}
             <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>
     );

@@ -136,7 +136,7 @@ const CartScreen = ({ navigation }) => {
                     <Text style={styles.emptySubtext}>Add some products to get started!</Text>
                     <Button
                         title="Start Shopping"
-                        onPress={() => navigation.navigate('Home')}
+                        onPress={() => navigation.navigate('Home', { openCatalog: true })}
                         style={styles.shopButton}
                     />
                 </FadeInView>

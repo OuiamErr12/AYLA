@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import colors from '../theme/colors';
 import { textStyles } from '../theme/typography';
-import spacing, { borderRadius, shadows } from '../theme/spacing';
+import spacing, { borderRadius } from '../theme/spacing';
 
 const SearchBar = ({ value, onChangeText, placeholder = "Search products...", style }) => {
     return (
@@ -15,6 +15,13 @@ const SearchBar = ({ value, onChangeText, placeholder = "Search products...", st
                 placeholder={placeholder}
                 placeholderTextColor={colors.gray}
                 style={styles.input}
+                returnKeyType="search"
+                autoCapitalize="none"
+                autoCorrect={false}
+                onSubmitEditing={(e) => {
+                    const text = e?.nativeEvent?.text ?? value;
+                    onChangeText(text);
+                }}
             />
             {value ? (
                 <Ionicons
@@ -32,11 +39,11 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: colors.white,
-        borderRadius: borderRadius.full,
-        paddingHorizontal: spacing.base,
+        backgroundColor: colors.lightGray, // Simpler background
+        borderRadius: borderRadius.circle, // Oval/Pill shape
+        paddingHorizontal: spacing.md,
         paddingVertical: spacing.sm,
-        ...shadows.sm,
+        // Removed shadows for "simple" look
     },
     icon: {
         marginRight: spacing.sm,

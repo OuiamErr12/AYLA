@@ -23,11 +23,16 @@ Une application mobile React Native élégante pour découvrir des produits de b
 - 📤 Partagez votre wishlist avec vos amis
 - 🗑️ Gérez facilement votre collection
 
-### 🎯 Design Premium
+### 🎯 Design Premium (Mise à jour v1.1)
 - 🌸 Palette de couleurs beige/nude chaleureuse
-- ✨ Accents rose gold élégants
-- 🎭 Gradients et ombres sophistiqués
+- ✨ **Interface Épurée** : Composants simplifiés et forme "ovale/pilule" pour plus de douceur
+- 👤 **Profil Élégant** : Design minimaliste sans cadres superflus
+- 🎭 Gradients et ombres subtils
 - 📐 Interface moderne et intuitive
+
+### 🆕 Dernières Modifications
+- **Barre de Recherche & Catégories** : Styles harmonisés avec des formes ovales simples, sans bordures lourdes.
+- **Écran de Profil** : Refonte complète pour une ergonomie plus fluide et une esthétique aérée.
 
 ## 🚀 Installation
 
